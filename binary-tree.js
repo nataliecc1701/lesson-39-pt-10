@@ -16,7 +16,7 @@ class BinaryTreeNode {
     if (this[dir]) {
       const leftSubLeg = this[dir].leg("left") + this[dir].val;
       const rightSubLeg = this[dir].leg("right") + this[dir].val;
-      const maxSubLeg = math.Max(leftSubLeg, rightSubLeg, 0)
+      const maxSubLeg = Math.max(leftSubLeg, rightSubLeg, 0)
       
       return maxSubLeg;
     }
@@ -40,7 +40,7 @@ class BinaryTree {
       const {node, depth} = queue.shift();
       if (!node.left && !node.right) return depth;
       
-      for (d of ["left", "right"]) {
+      for (const d of ["left", "right"]) {
         if (node[d]) queue.push({node:node[d], depth:depth+1})
       }
     }
@@ -54,11 +54,11 @@ class BinaryTree {
     let maxSeen = 0;
     if (stack[0].node === null) return 0;
     
-    while(queue.length > 0) {
+    while(stack.length > 0) {
       const {node, depth} = stack.pop();
       if (!node.left && !node.right && depth > maxSeen) maxSeen=depth;
       
-      for (d of ["left", "right"]) {
+      for (const d of ["left", "right"]) {
         if (node[d]) stack.push({node:node[d], depth:depth+1})
       }
     }
@@ -77,9 +77,9 @@ class BinaryTree {
       const currNode = queue.shift();
       
       const currSeen = currNode.leg("left") + currNode.leg("right") + currNode.val;
-      if (currSeen > maxSeen) maxSeen = curSeen;
+      if (currSeen > maxSeen) maxSeen = currSeen;
       
-      for (d of ["left", "right"]) {
+      for (const d of ["left", "right"]) {
         if (currNode[d]) queue.push(currNode[d]);
       }
     }
@@ -103,7 +103,7 @@ class BinaryTree {
           bestSeen = currNode.val;
         }
       
-      for (d of ["left", "right"]) {
+      for (const d of ["left", "right"]) {
         if (currNode[d]) queue.push(currNode[d]);
       }
     }
