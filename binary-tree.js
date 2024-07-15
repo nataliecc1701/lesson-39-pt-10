@@ -6,6 +6,22 @@ class BinaryTreeNode {
     this.left = left;
     this.right = right;
   }
+  
+  // used in the maxSum function
+  // calculates the highest single-directional sum coming off of a child node
+  // argument dir can be "left" or "right"
+  leg(dir) {
+    if (!(dir in this)) throw new Error("leg requires valid direction")
+      
+    if (this[dir]) {
+      const leftSubLeg = this[dir].leg("left") + this[dir].value;
+      const rightSubLeg = this[dir].leg("right") + this[dir].value;
+      const maxSubLeg = math.Max(leftSubLeg, rightSubLeg, 0)
+      
+      return maxSubLeg;
+    }
+    return 0;
+  }
 }
 
 class BinaryTree {
@@ -17,7 +33,7 @@ class BinaryTree {
    * the length of the shortest path from the root to a leaf. */
 
   minDepth() {
-    const queue = [{node: this.root, depth: 0}]
+    const queue = [{node: this.root, depth: 1}]
     if (queue[0].node === null) return 0
     
     while (queue.length > 0) {
@@ -34,7 +50,7 @@ class BinaryTree {
    * the length of the longest path from the root to a leaf. */
 
   maxDepth() {
-    const stack = [{node: this.root, depth: 0}]
+    const stack = [{node: this.root, depth: 1}]
     let maxSeen = 0;
     if (stack[0].node === null) return 0;
     
@@ -53,7 +69,17 @@ class BinaryTree {
    * The path doesn't need to start at the root, but you can't visit a node more than once. */
 
   maxSum() {
-
+    const queue = [this.root];
+    let maxSeen = 0;
+    if (queue[0] === null) return 0;
+    
+    while(queue.length > 0) {
+      const currNode = queue.shift();
+      
+      const currSeen = currNode.leg("left") + currNode.leg("right") + currNode.val;
+      if (currSeen > maxSeen) maxSeen = curSeen;
+    }
+    return maxSeen
   }
 
   /** nextLarger(lowerBound): return the smallest value in the tree
