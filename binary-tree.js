@@ -18,7 +18,7 @@ class BinaryTree {
 
   minDepth() {
     const queue = [{node: this.root, depth: 0}]
-    if (queue[0] === null) return 0
+    if (queue[0].node === null) return 0
     
     while (queue.length > 0) {
       const {node, depth} = queue.shift();
@@ -34,7 +34,19 @@ class BinaryTree {
    * the length of the longest path from the root to a leaf. */
 
   maxDepth() {
-
+    const stack = [{node: this.root, depth: 0}]
+    let maxSeen = 0;
+    if (stack[0].node === null) return 0;
+    
+    while(queue.length > 0) {
+      const {node, depth} = stack.pop();
+      if (!node.left && !node.right && depth > maxSeen) maxSeen=depth;
+      
+      for (d of [left, right]) {
+        if (node[d]) stack.push({node:node[d], depth:depth+1})
+      }
+    }
+    return maxSeen;
   }
 
   /** maxSum(): return the maximum sum you can obtain by traveling along a path in the tree.
