@@ -60,7 +60,8 @@ class Tree {
       if (currNode.val > lowerBound) count++;
       queue.push(...currNode.children);
     }
-
+    
+    return count;
   }
 }
 
