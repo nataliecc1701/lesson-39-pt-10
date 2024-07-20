@@ -7,20 +7,37 @@ class BinaryTreeNode {
     this.right = right;
   }
   
-  // used in the maxSum function
-  // calculates the highest single-directional sum coming off of a child node
-  // argument dir can be "left" or "right"
-  leg(dir) {
-    if (!(dir in this)) throw new Error("leg requires valid direction")
-      
-    if (this[dir]) {
-      const leftSubLeg = this[dir].leg("left") + this[dir].val;
-      const rightSubLeg = this[dir].leg("right") + this[dir].val;
-      const maxSubLeg = Math.max(leftSubLeg, rightSubLeg, 0)
-      
-      return maxSubLeg;
-    }
-    return 0;
+  /** used in maxSum(); contains all of its important logic
+   * A "path" for maxSum() consists of a root and up to two "legs" corresponding to branches
+   * off the root. The branches are singly-linked and follow paths in the tree.
+   * 
+   * returns {
+   *    leg: the maximum leg that can be formed from this node
+   *    path: the greatest path in this node's subtree
+   * }
+   * 
+   */
+  legs() {
+    // returned by recursive calls on children that do not exist
+    const zeroReturn = {leg: 0, path: 0}
+    
+    // recurse to traverse the tree
+    const leftLeg = this.left ? this.left.legs() : zeroReturn;
+    const rightLeg = this.right ? this.right.legs() : zeroReturn;
+    
+    // maximum leg that can include this node is equal to the maximum leg off its children
+    // plus its own value.
+    // 0 included because if any leg containing this node is negative, it can be excluded
+    const maxLeg = Math.max(leftLeg.leg+this.val, rightLeg.leg+this.val, 0)
+    
+    // best path: either the best path in the left or right subtree
+    // or has this node as its root
+    const maxPath = Math.max(
+      leftLeg.path, rightLeg.path,
+      Math.max(leftLeg.leg, 0) + Math.max(rightLeg.leg, 0) + this.val
+    )
+    
+    return {leg: maxLeg, path: maxPath};
   }
 }
 
@@ -66,24 +83,13 @@ class BinaryTree {
   }
 
   /** maxSum(): return the maximum sum you can obtain by traveling along a path in the tree.
-   * The path doesn't need to start at the root, but you can't visit a node more than once. */
+   * The path doesn't need to start at the root, but you can't visit a node more than once.
+   * logic is outsourced to the recursive function BinaryTreeNode.legs() */
 
   maxSum() {
-    const queue = [this.root];
-    let maxSeen = 0;
-    if (queue[0] === null) return 0;
+    if (!this.root) return 0
     
-    while(queue.length > 0) {
-      const currNode = queue.shift();
-      
-      const currSeen = currNode.leg("left") + currNode.leg("right") + currNode.val;
-      if (currSeen > maxSeen) maxSeen = currSeen;
-      
-      for (const d of ["left", "right"]) {
-        if (currNode[d]) queue.push(currNode[d]);
-      }
-    }
-    return maxSeen
+    return this.root.legs().path;
   }
 
   /** nextLarger(lowerBound): return the smallest value in the tree
