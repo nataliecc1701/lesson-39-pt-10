@@ -27,7 +27,7 @@ class BinaryTreeNode {
     
     // maximum leg that can include this node is equal to the maximum leg off its children
     // plus its own value.
-    // 0 included because if any leg containing this node is negative, it can be excluded
+    // 0 included because if all legs containing this node are negative, it can be excluded
     const maxLeg = Math.max(leftLeg.leg+this.val, rightLeg.leg+this.val, 0)
     
     // best path: either the best path in the left or right subtree
